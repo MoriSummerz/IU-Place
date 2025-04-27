@@ -3,6 +3,7 @@ from typing import List
 from pixel_packet import PixelPacket
 from redis_client import RedisClient
 
+
 class WebsocketService:
     def __init__(self, redis_client: RedisClient):
         self.active_connections: List[WebSocket] = []

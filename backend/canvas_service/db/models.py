@@ -3,6 +3,7 @@ from sqlalchemy import Column, Integer
 
 Base = declarative_base()
 
+
 class Pixel(Base):
     __tablename__ = "pixel"
 

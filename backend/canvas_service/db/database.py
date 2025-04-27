@@ -1,11 +1,15 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import select, insert
+from sqlalchemy import select
 from .models import Base, Pixel
+from config import DATABASE_URL
 
-DATABASE_URL = "postgresql+asyncpg://postgres:postgres@127.0.0.1/pixelbattle"
+
 engine = create_async_engine(DATABASE_URL)
-AsyncSessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
+AsyncSessionLocal = sessionmaker(
+    bind=engine, class_=AsyncSession, expire_on_commit=False
+)
+
 
 async def init_db():
     async with engine.begin() as conn:
@@ -19,12 +23,14 @@ async def get_pixel(x: int, y: int) -> Pixel:
             pixel = await session.get(Pixel, (x, y))
             return pixel
 
+
 async def get_all_pixels() -> list[Pixel]:
     async with AsyncSessionLocal() as session:
         async with session.begin():
             result = await session.execute(select(Pixel))
             pixels = result.scalars().all()
             return pixels
+
 
 async def create_pixel(x: int, y: int, color: int):
     async with AsyncSessionLocal() as session:
@@ -51,7 +57,6 @@ async def initialize_all_pixels(width: int, height: int, color: int = 0):
             if missing_pixels:
                 session.add_all(missing_pixels)
                 await session.commit()
-
 
 
 async def update_pixel(x: int, y: int, color: str):
