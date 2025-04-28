@@ -27,7 +27,6 @@ class WebsocketService:
                 if packet is None:
                     await websocket.send_text("Invalid packet format")
                     continue
-                print(f"Received packet: {packet.x}, {packet.y}, {packet.color}")
                 await self.redis_client.publish(f"{packet.x},{packet.y},{packet.color}")
         except WebSocketDisconnect:
             await self.disconnect(websocket)

@@ -27,12 +27,10 @@ class RedisClient:
                 continue
             try:
                 x, y, color = map(int, message["data"].split(","))
-                print(f"Received message: {message['data']}")
                 result = await update_pixel(x, y, color)
                 if not result:
                     print(f"Pixel not updated: x={x}, y={y}, color={color}")
-                    return
-                print(f"Pixel updated: x={x}, y={y}, color={color}")
+                    continue
                 await self.publish(message["data"])
             except Exception as e:
                 print(f"Error processing message: {message['data']}, Error: {e}")
@@ -43,7 +41,4 @@ class RedisClient:
         await self.handle_messages()
 
     async def publish(self, message):
-        subscribers = await self.redis.publish(self.broadcast_channel, message)
-        print(
-            f"Published message: {message} to channel: {self.broadcast_channel}, Subscribers: {subscribers}"
-        )
+        await self.redis.publish(self.broadcast_channel, message)

@@ -26,15 +26,12 @@ class RedisClient:
 
     async def handle_messages(self):
         async for message in self.pubsub.listen():
-            print(f"Message: {message}")
             try:
-                print(f"Received message: {message}")
                 if message["type"] != "message" or self.websocket_service is None:
                     continue
                 x, y, color = map(int, message["data"].split(","))
                 payload = PixelPacket(x, y, color).to_bytes()
                 await self.websocket_service.broadcast(payload)
-                print(f"Broadcasted payload: {payload}")
             except Exception as e:
                 print(f"Error handling message: {e}")
 
@@ -56,4 +53,3 @@ class RedisClient:
 
     async def publish(self, message):
         await self.redis.publish(self.update_channel, message)
-        print(f"Published message: {message} to channel: {self.update_channel}")

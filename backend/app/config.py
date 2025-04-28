@@ -1,5 +1,5 @@
-MAP_HEIGHT = 1000
-MAP_WEIGHT = 1000
+MAP_WIDTH = 100
+MAP_HEIGHT = 100
 REDIS_HOST = "localhost"
 REDIS_PORT = 6379
 REDIS_DB = 0
@@ -9,3 +9,5 @@ BROADCAST_CHANNEL = "broadcast_channel"
 
 API_HOST = "0.0.0.0"
 API_PORT = 5000
+
+DATABASE_URL = "postgresql+asyncpg://postgres:postgres@127.0.0.1/pixelbattle"

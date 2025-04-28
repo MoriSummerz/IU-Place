@@ -1,4 +1,7 @@
-fastapi==0.115.12
 SQLAlchemy==2.0.40
+fastapi==0.115.12
 uvicorn==0.34.2
-psycopg2==3.2.6
+pydantic==2.11.3
+redis==5.2.1
+asyncpg==0.30.0
+websockets==15.0.1
