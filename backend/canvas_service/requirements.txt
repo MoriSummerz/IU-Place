@@ -1,0 +1,4 @@
+SQLAlchemy==2.0.36
+redis==5.2.1
+asyncpg==0.30.0
+websockets==15.0.1

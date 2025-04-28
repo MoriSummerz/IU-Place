@@ -1,0 +1,70 @@
+version: "3.9"
+
+services:
+  fastapi_app:
+    build:
+      context: ./backend/app
+      dockerfile: Dockerfile
+    container_name: fastapi-app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/postgres
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - REDIS_PASSWORD=
+      - MAP_WEIGHT=1000
+      - MAP_HEIGHT=1000
+      - UPDATE_CHANNEL=pixel_update
+      - BROADCAST_CHANNEL=pixel_broadcast
+    restart: unless-stopped
+
+  canvas_service:
+    build:
+      context: ./backend/canvas_service
+      dockerfile: Dockerfile
+    container_name: redis-worker
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/postgres
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - REDIS_PASSWORD=
+      - UPDATE_CHANNEL=pixel_update
+      - BROADCAST_CHANNEL=pixel_broadcast
+      - MAP_WEIGHT=1000
+      - MAP_HEIGHT=1000
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-server
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
