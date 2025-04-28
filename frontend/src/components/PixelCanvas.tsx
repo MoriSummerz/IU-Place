@@ -1,6 +1,5 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { toast } from "sonner";
-import { PixelWebSocketService, indexToColor, getWebSocketService } from '../services/websocketService';
+import React, {useRef, useState, useEffect} from 'react';
+import {toast} from "sonner";
 
 interface PixelCanvasProps {
   width: number;
@@ -16,18 +15,14 @@ interface Pixel {
   lastModified?: Date;
 }
 
-const API_URL = import.meta.env.VITE_API_URL || 'ws://localhost:5123';
-
-const PixelCanvas: React.FC<PixelCanvasProps> = ({ width, height, pixelSize, selectedColor }) => {
+const PixelCanvas: React.FC<PixelCanvasProps> = ({width, height, pixelSize, selectedColor}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState({x: 0, y: 0});
   const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [dragStart, setDragStart] = useState({x: 0, y: 0});
   const [selectedPixel, setSelectedPixel] = useState<Pixel | null>(null);
-  const [wsService, setWsService] = useState<PixelWebSocketService | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
 
   const MIN_SCALE = 0.2;
   const MAX_SCALE = 5;
@@ -36,45 +31,14 @@ const PixelCanvas: React.FC<PixelCanvasProps> = ({ width, height, pixelSize, sel
   const [pixels, setPixels] = useState<Record<string, Pixel>>({});
 
   useEffect(() => {
-    const service = getWebSocketService(API_URL);
-    setWsService(service);
-
-    service.onPixelUpdate((pixelData) => {
-      const { x, y, colorIndex } = pixelData;
-      const color = indexToColor(colorIndex);
-
-      setPixels(prev => ({
-        ...prev,
-        [`${x},${y}`]: {
-          x,
-          y,
-          color,
-          lastModified: new Date()
-        }
-      }));
-    });
-
-    service.connect()
-      .then(() => {
-        setIsConnected(true);
-        toast.success("Connected to pixel server");
-      })
-      .catch((error) => {
-        console.error("Failed to connect to pixel server:", error);
-        toast.error("Failed to connect to pixel server");
-      });
-
-    return () => {
-      service.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d', { alpha: false });
+    const ctx = canvas.getContext('2d', {alpha: false});
     if (!ctx) return;
+
+    canvas.width = width;
+    canvas.height = height;
 
     ctx.imageSmoothingEnabled = false;
 
@@ -115,9 +79,11 @@ const PixelCanvas: React.FC<PixelCanvasProps> = ({ width, height, pixelSize, sel
     }
   }, [width, height, pixelSize, pixels, selectedPixel]);
 
+  // Add keyboard event listeners
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!selectedPixel && e.key.startsWith('Arrow')) {
+        // If no pixel is selected, select the center pixel
         const pixelCountX = Math.floor(width / pixelSize);
         const pixelCountY = Math.floor(height / pixelSize);
         setSelectedPixel({
@@ -132,6 +98,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = ({ width, height, pixelSize, sel
         const pixelCountX = Math.floor(width / pixelSize);
         const pixelCountY = Math.floor(height / pixelSize);
 
+        // Arrow keys for pixel selection
         switch (e.key) {
           case 'ArrowLeft':
             if (selectedPixel.x > 0) {
@@ -158,7 +125,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = ({ width, height, pixelSize, sel
             }
             break;
           case ' ': // Spacebar for painting
-            e.preventDefault();
+            e.preventDefault(); // Prevent page scroll
             handlePaintPixel();
             break;
           default:
@@ -172,7 +139,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = ({ width, height, pixelSize, sel
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [selectedPixel, width, height, pixelSize, selectedColor, wsService]);
+  }, [selectedPixel, width, height, pixelSize, selectedColor]);
 
   const updateSelectedPixel = (x: number, y: number) => {
     const pixelKey = `${x},${y}`;
@@ -191,7 +158,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = ({ width, height, pixelSize, sel
   const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault();
 
-    const zoomFactor = e.deltaY > 0 ? 0.98 : 1.02;
+    const zoomFactor = e.deltaY > 0 ? 0.95 : 1.05;
     const newScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale * zoomFactor));
 
     const container = containerRef.current;
@@ -242,12 +209,12 @@ const PixelCanvas: React.FC<PixelCanvasProps> = ({ width, height, pixelSize, sel
       ? (containerHeight - scaledCanvasHeight) / 2
       : Math.min(maxY, Math.max(minY, pos.y));
 
-    return { x: finalX, y: finalY };
+    return {x: finalX, y: finalY};
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
-    setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
+    setDragStart({x: e.clientX - position.x, y: e.clientY - position.y});
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -269,6 +236,11 @@ const PixelCanvas: React.FC<PixelCanvasProps> = ({ width, height, pixelSize, sel
       );
 
       setPosition(boundedPosition);
+
+      if (boundedPosition.x !== newPosition.x || boundedPosition.y !== newPosition.y) {
+        // Using a debounced version would be better in production to prevent too many toasts
+        // For simplicity, we'll just suppress the toast here
+      }
     }
   };
 
@@ -312,11 +284,6 @@ const PixelCanvas: React.FC<PixelCanvasProps> = ({ width, height, pixelSize, sel
 
     const pixelKey = `${selectedPixel.x},${selectedPixel.y}`;
 
-    if (pixels[pixelKey] && pixels[pixelKey].color === selectedColor) {
-      toast("Pixel already painted with the same color");
-      return;
-    }
-
     setPixels(prev => ({
       ...prev,
       [pixelKey]: {
@@ -326,20 +293,9 @@ const PixelCanvas: React.FC<PixelCanvasProps> = ({ width, height, pixelSize, sel
       }
     }));
 
-    if (wsService && wsService.isConnected()) {
-      const success = wsService.sendPixelUpdate(selectedPixel.x, selectedPixel.y, selectedColor);
-      if (success) {
-        toast.success("Pixel painted and sent to server!", {
-          description: `Position: (${selectedPixel.x}, ${selectedPixel.y})`
-        });
-      } else {
-        toast.error("Failed to send pixel update to server");
-      }
-    } else {
-      toast("Pixel painted locally only (not connected to server)", {
-        description: `Position: (${selectedPixel.x}, ${selectedPixel.y})`
-      });
-    }
+    toast("Pixel painted!", {
+      description: `Position: (${selectedPixel.x}, ${selectedPixel.y})`
+    });
   };
 
   return (
@@ -353,7 +309,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = ({ width, height, pixelSize, sel
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         onClick={handleCanvasClick}
-        tabIndex={0}
+        tabIndex={0} // Make the container focusable for keyboard events
       >
         <div style={{
           transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
@@ -376,33 +332,24 @@ const PixelCanvas: React.FC<PixelCanvasProps> = ({ width, height, pixelSize, sel
         </div>
       </div>
 
-      <div className="neo-container p-4 m-4 flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-          <div className={`h-3 w-3 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
-          <span className="text-xs text-muted-foreground">
-            {isConnected ? 'Connected to pixel server' : 'Not connected to server'}
-          </span>
-        </div>
-
-        {selectedPixel && (
-          <div className="flex justify-between items-center flex-1 ml-4">
-            <div>
-              <p className="text-sm font-medium">
-                Selected: ({selectedPixel.x}, {selectedPixel.y})
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Current color: <span style={{ color: selectedPixel.color }}>{selectedPixel.color}</span>
-              </p>
-            </div>
-            <button
-              onClick={handlePaintPixel}
-              className="neo-glow px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium animate-pulse-glow"
-            >
-              Paint Pixel
-            </button>
+      {selectedPixel && (
+        <div className="neo-container p-4 m-4 flex justify-between items-center">
+          <div>
+            <p className="text-sm font-medium">
+              Selected: ({selectedPixel.x}, {selectedPixel.y})
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Current color: <span style={{color: selectedPixel.color}}>{selectedPixel.color}</span>
+            </p>
           </div>
-        )}
-      </div>
+          <button
+            onClick={handlePaintPixel}
+            className="neo-glow px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium animate-pulse-glow"
+          >
+            Paint Pixel
+          </button>
+        </div>
+      )}
     </div>
   );
 };
