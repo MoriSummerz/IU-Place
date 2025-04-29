@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from routes.router import router
 from depends import redis_client
 from contextlib import asynccontextmanager
-from config import API_HOST, API_PORT
+from fastapi.middleware.cors import CORSMiddleware
 
 
 @asynccontextmanager
@@ -14,4 +14,13 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(router)
