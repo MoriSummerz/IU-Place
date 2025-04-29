@@ -1,5 +1,5 @@
 # UI/place - Collaborative Pixel Canvas Editr
-> Project built as part of Distributed and Network Programming Course
+> Project built as part of Distributed and Network Programming Course Final project
 
 ## Authors
 - [Nikita Timofeev](https://github.com/morisummerz)
