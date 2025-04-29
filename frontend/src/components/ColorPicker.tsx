@@ -1,48 +1,30 @@
-import React, {useEffect} from 'react';
-import {COLORS} from "@/lib/constants.ts";
 
-interface ColorPickerProps {
-  selectedColor: string;
-  onSelectColor: (color: string) => void;
-}
+import React from "react";
+import { useCanvas, COLOR_PALETTE } from "@/context/CanvasContext";
 
-const ColorPicker: React.FC<ColorPickerProps> = ({selectedColor, onSelectColor}) => {
-
-  // Handle keyboard shortcuts for color selection
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key >= '1' && e.key <= '9') {
-        const index = parseInt(e.key) - 1;
-        if (index < COLORS.length) {
-          onSelectColor(COLORS[index]);
-        }
-      }
-      else if (e.key === '0') {
-        if (9 < COLORS.length) {
-          onSelectColor(COLORS[9]);
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [onSelectColor]);
+const ColorPicker: React.FC = () => {
+  const { selectedColor, setSelectedColor } = useCanvas();
 
   return (
-    <div className="neo-container p-4 m-4">
-      <h3 className="text-sm font-medium mb-3">Select Color</h3>
-      <div className="flex flex-wrap gap-2">
-        {COLORS.map((color, index) => (
+    <div className="w-full bg-secondary/90 rounded-lg p-2 glass-morphism">
+      <div className="flex flex-wrap justify-center gap-2">
+        {COLOR_PALETTE.slice(0, 16).map((color, index) => (
           <button
-            key={color}
-            className={`color-button ${color === selectedColor ? 'active' : ''}`}
-            style={{backgroundColor: color}}
-            onClick={() => onSelectColor(color)}
-            title={`${color} (${index < 10 ? (index + 1) % 10 : ''})`}
+            key={index}
+            className={`w-8 h-8 rounded-md transition-all duration-200 ${
+              selectedColor === index 
+                ? "ring-2 ring-neon-green shadow-[0_0_8px_rgba(0,255,65,0.5)]" 
+                : "hover:scale-110"
+            }`}
+            style={{ backgroundColor: color }}
+            onClick={() => setSelectedColor(index)}
+            title={`Color ${index}`}
+            aria-label={`Select color ${index}`}
           />
         ))}
+      </div>
+      <div className="mt-2 text-center text-xs text-muted-foreground">
+        Press 0-9 keys to quickly select colors
       </div>
     </div>
   );

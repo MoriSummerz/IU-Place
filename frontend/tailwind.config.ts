@@ -63,12 +63,9 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				pixel: {
-					neon: '#00f2ff',
-					purple: '#8a2be2',
-					pink: '#ff1493',
-					orange: '#ff7f00',
-					green: '#39ff14'
+				neon: {
+					green: '#00FF41',
+					glow: 'rgba(0, 255, 65, 0.6)',
 				}
 			},
 			borderRadius: {
@@ -93,19 +90,26 @@ export default {
 						height: '0'
 					}
 				},
-				'pulse-glow': {
+				'pulse-neon': {
 					'0%, 100%': { 
-						boxShadow: '0 0 5px rgba(0, 242, 255, 0.3), 0 0 10px rgba(0, 242, 255, 0.2)'
+						opacity: '1',
+						boxShadow: '0 0 5px rgba(0, 255, 65, 0.7), 0 0 10px rgba(0, 255, 65, 0.5), 0 0 15px rgba(0, 255, 65, 0.3)'
 					},
 					'50%': { 
-						boxShadow: '0 0 20px rgba(0, 242, 255, 0.6), 0 0 30px rgba(0, 242, 255, 0.4)'
+						opacity: '0.8',
+						boxShadow: '0 0 10px rgba(0, 255, 65, 0.9), 0 0 20px rgba(0, 255, 65, 0.7), 0 0 30px rgba(0, 255, 65, 0.5)'
 					}
+				},
+				'connection-active': {
+					'0%, 100%': { backgroundColor: '#00FF41' },
+					'50%': { backgroundColor: 'rgba(0, 255, 65, 0.6)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'pulse-glow': 'pulse-glow 2s ease-in-out infinite'
+				'pulse-neon': 'pulse-neon 2s infinite',
+				'connection-active': 'connection-active 2s infinite'
 			}
 		}
 	},

@@ -1,32 +1,23 @@
 
-import React, { useState } from 'react';
-import PixelCanvas from '../components/PixelCanvas';
-import ColorPicker from '../components/ColorPicker';
-import Header from '../components/Header';
+import React from "react";
+import { CanvasProvider } from "@/context/CanvasContext";
+import Header from "@/components/Header";
+import CanvasGrid from "@/components/CanvasGrid";
+import Footer from "@/components/Footer";
 
-const Index: React.FC = () => {
-  const [selectedColor, setSelectedColor] = useState("#00f2ff"); // Default to neon blue
-  
-  const canvasWidth = 1000;
-  const canvasHeight = 1000;
-  const pixelSize = 10;
-  
+const Index = () => {
   return (
-    <div className="flex flex-col h-screen">
-      <Header />
-      <div className="flex-1 flex flex-col">
-        <PixelCanvas 
-          width={canvasWidth}
-          height={canvasHeight}
-          pixelSize={pixelSize}
-          selectedColor={selectedColor}
-        />
-        <ColorPicker 
-          selectedColor={selectedColor}
-          onSelectColor={setSelectedColor}
-        />
+    <CanvasProvider>
+      <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
+        <Header />
+        <main className="flex-grow px-4 py-6 overflow-hidden">
+          <div className="container mx-auto h-full">
+            <CanvasGrid />
+          </div>
+        </main>
+        <Footer />
       </div>
-    </div>
+    </CanvasProvider>
   );
 };
 
