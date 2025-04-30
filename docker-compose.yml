@@ -17,7 +17,7 @@ services:
       - REDIS_PORT=6379
       - REDIS_DB=0
       - REDIS_PASSWORD=
-      - MAP_WEIGHT=100
+      - MAP_WIDTH=100
       - MAP_HEIGHT=100
       - UPDATE_CHANNEL=pixel_update
       - BROADCAST_CHANNEL=pixel_broadcast
@@ -39,7 +39,7 @@ services:
       - REDIS_PASSWORD=
       - UPDATE_CHANNEL=pixel_update
       - BROADCAST_CHANNEL=pixel_broadcast
-      - MAP_WEIGHT=1000
+      - MAP_WIDTH=1000
       - MAP_HEIGHT=1000
     restart: unless-stopped
 

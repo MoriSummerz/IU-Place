@@ -1,7 +1,7 @@
 import os
 
-MAP_HEIGHT = int(os.getenv("MAP_WEIGHT", 100))
-MAP_WEIGHT = int(os.getenv("MAP_HEIGHT", 100))
+MAP_WIDTH = int(os.getenv("MAP_WIDTH", 100))
+MAP_HEIGHT = int(os.getenv("MAP_HEIGHT", 100))
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
 REDIS_DB = int(os.getenv("REDIS_DB", 0))

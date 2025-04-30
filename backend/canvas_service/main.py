@@ -3,7 +3,7 @@ from redis_client import RedisClient
 from db.database import init_db, initialize_all_pixels
 from config import (
     MAP_HEIGHT,
-    MAP_WEIGHT,
+    MAP_WIDTH,
     REDIS_DB,
     REDIS_PORT,
     REDIS_HOST,
@@ -15,7 +15,7 @@ from config import (
 
 async def main():
     await init_db()
-    await initialize_all_pixels(MAP_WEIGHT, MAP_HEIGHT)
+    await initialize_all_pixels(MAP_WIDTH, MAP_HEIGHT)
 
     redis_client = RedisClient(
         host=REDIS_HOST,
