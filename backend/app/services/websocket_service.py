@@ -2,6 +2,7 @@ from fastapi import WebSocket, WebSocketDisconnect
 from typing import List
 from pixel_packet import PixelPacket
 from redis_client import RedisClient
+import asyncio
 
 
 class WebsocketService:
@@ -32,8 +33,14 @@ class WebsocketService:
             await self.disconnect(websocket)
 
     async def broadcast(self, payload: bytes):
-        for connection in self.active_connections:
-            try:
-                await connection.send_bytes(payload)
-            except Exception as e:
-                print(f"Error sending bytes: {e}")
+        await asyncio.gather(
+            *[self.send_broadcast_to_client(connection, payload) for connection in self.active_connections]
+        )
+
+    async def send_broadcast_to_client(self, connection: WebSocket, payload: bytes):
+        try:
+            await connection.send_bytes(payload)
+        except RuntimeError:
+            await self.disconnect(connection)
+        except Exception as e:
+            print(f"Error sending bytes to client: {e}")
