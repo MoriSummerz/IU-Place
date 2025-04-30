@@ -39,8 +39,8 @@ services:
       - REDIS_PASSWORD=
       - UPDATE_CHANNEL=pixel_update
       - BROADCAST_CHANNEL=pixel_broadcast
-      - MAP_WIDTH=1000
-      - MAP_HEIGHT=1000
+      - MAP_WIDTH=100
+      - MAP_HEIGHT=100
     restart: unless-stopped
 
   db:
