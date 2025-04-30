@@ -36,4 +36,3 @@ DB_PASSWORD=<YOUR_PASSWORD> APP_PORT=<YOUR_PORT> docker compose up --build
 ![Frontend](https://skillicons.dev/icons?i=ts,react,vite,tailwind&theme=dark) \
 ![DevOps](https://skillicons.dev/icons?i=docker,nginx&theme=dark)
 
-
