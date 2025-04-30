@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from "react";
-import { toast } from "@/components/ui/sonner";
+import React, {createContext, useContext, useEffect, useState, useCallback, useRef} from "react";
+import {toast} from "@/components/ui/sonner";
 
 // Define types
 export interface Pixel {
@@ -56,7 +56,7 @@ export const colorToIndex = (color: string): number => {
   return index >= 0 ? index : 0;
 };
 
-export const CanvasProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const CanvasProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
   const [canvas, setCanvas] = useState<CanvasState>({
     width: 100,
     height: 100,
@@ -71,18 +71,18 @@ export const CanvasProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   useEffect(() => {
     const fetchCanvas = async () => {
       try {
-        const response = await fetch('http://localhost:5123/api/canvas/');
+        const response = await fetch('/api/canvas/');
         if (!response.ok) {
           throw new Error('Failed to fetch canvas');
         }
         const data = await response.json();
-        
+
         // Convert array of pixels to a map for faster lookup
         const pixelMap: Record<string, Pixel> = {};
         data.pixels.forEach((pixel: Pixel) => {
           pixelMap[`${pixel.x},${pixel.y}`] = pixel;
         });
-        
+
         setCanvas({
           width: data.width,
           height: data.height,
@@ -101,9 +101,10 @@ export const CanvasProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   useEffect(() => {
     const connectWebSocket = () => {
       setConnectionStatus('connecting');
-      const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:5123/api/ws/';
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5123/api/';
-      const socket = new WebSocket(wsUrl);
+      const socket = new WebSocket(
+        `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://` +
+        `${window.location.host}/api/ws/`
+      );
 
       socket.onopen = () => {
         setConnectionStatus('connected');
@@ -134,9 +135,9 @@ export const CanvasProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             const colorIndex = view.getUint8(4);
 
             setCanvas(prevCanvas => {
-              const newPixels = { ...prevCanvas.pixels };
-              newPixels[`${x},${y}`] = { x, y, color: colorIndex };
-              return { ...prevCanvas, pixels: newPixels };
+              const newPixels = {...prevCanvas.pixels};
+              newPixels[`${x},${y}`] = {x, y, color: colorIndex};
+              return {...prevCanvas, pixels: newPixels};
             });
           };
           reader.readAsArrayBuffer(event.data);
@@ -144,14 +145,14 @@ export const CanvasProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       };
 
       socketRef.current = socket;
-      
+
       return () => {
         socket.close();
       };
     };
 
     connectWebSocket();
-    
+
     // Cleanup function
     return () => {
       if (socketRef.current) {
@@ -174,20 +175,20 @@ export const CanvasProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const buffer = new ArrayBuffer(5); // 2 bytes for x, 2 for y, 1 for color
       const view = new DataView(buffer);
-      
+
       // Write data in big-endian format (>HHB)
       view.setUint16(0, x, false); // x coordinate (big-endian)
       view.setUint16(2, y, false); // y coordinate (big-endian)
       view.setUint8(4, selectedColor); // color index
-      
+
       // Send binary data
       socketRef.current.send(buffer);
-      
+
       // Optimistically update the UI
       setCanvas(prevCanvas => {
-        const newPixels = { ...prevCanvas.pixels };
-        newPixels[`${x},${y}`] = { x, y, color: selectedColor };
-        return { ...prevCanvas, pixels: newPixels };
+        const newPixels = {...prevCanvas.pixels};
+        newPixels[`${x},${y}`] = {x, y, color: selectedColor};
+        return {...prevCanvas, pixels: newPixels};
       });
       toast.success('Pixel painted successfully');
     } else {
@@ -204,7 +205,7 @@ export const CanvasProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       }
 
       if (selectedPosition) {
-        let { x, y } = selectedPosition;
+        let {x, y} = selectedPosition;
 
         switch (e.key) {
           case 'ArrowUp':
@@ -238,7 +239,7 @@ export const CanvasProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         }
 
         if (x !== selectedPosition.x || y !== selectedPosition.y) {
-          setSelectedPosition({ x, y });
+          setSelectedPosition({x, y});
         }
       } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
         // If no pixel is selected, select the center of the canvas
