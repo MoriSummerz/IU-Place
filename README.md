@@ -24,7 +24,7 @@ cd IU-Place
 2. Run the compose file
 
 ```bash
-DB_PASSWORD=<YOUR_PASSWORD> APP_PORT=<YOUR_PORT> docker compose up --build
+DB_PASSWORD=<YOUR_PASSWORD> APP_PORT=<YOUR_PORT> GF_USER=<GRAFANA_USER> GF_PASSWORD=<GRAFANA_PASSWORD> docker compose up --build
 ```
 
 3. Open the browser and go to `localhost:<YOUR_PORT>` \
