@@ -32,7 +32,10 @@ DB_PASSWORD=<YOUR_PASSWORD> APP_PORT=<YOUR_PORT> docker compose up --build
 
 ## What technologies were used?
 
-![Backend](https://skillicons.dev/icons?i=python,fastapi,redis,postgres&theme=dark) \
-![Frontend](https://skillicons.dev/icons?i=ts,react,vite,tailwind&theme=dark) \
+#### Backend
+![Backend](https://skillicons.dev/icons?i=python,fastapi,redis,postgres&theme=dark)
+#### Frontend
+![Frontend](https://skillicons.dev/icons?i=ts,react,vite,tailwind&theme=dark)
+#### DevOps
 ![DevOps](https://skillicons.dev/icons?i=docker,nginx,prometheus,grafana&theme=dark)
 
