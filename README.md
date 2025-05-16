@@ -1,6 +1,6 @@
 # UI/place - Collaborative Pixel Canvas Editr
 
-> Project built as part of Distributed and Network Programming Course Final project
+> Project built as part of "Distributed and Network Programming" and "System and Network Administration" courses final project
 
 Real-time collaborative pixel canvas editor, inspired by the famous [Reddit Place](https://www.reddit.com/r/place/) (
 also known as Pixel Battle). \
@@ -34,5 +34,5 @@ DB_PASSWORD=<YOUR_PASSWORD> APP_PORT=<YOUR_PORT> docker compose up --build
 
 ![Backend](https://skillicons.dev/icons?i=python,fastapi,redis,postgres&theme=dark) \
 ![Frontend](https://skillicons.dev/icons?i=ts,react,vite,tailwind&theme=dark) \
-![DevOps](https://skillicons.dev/icons?i=docker,nginx&theme=dark)
+![DevOps](https://skillicons.dev/icons?i=docker,nginx,prometheus,grafana&theme=dark)
 
