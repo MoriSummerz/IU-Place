@@ -1,6 +1,7 @@
 import asyncio
 import redis.asyncio as redis
 from pixel_packet import PixelPacket
+from prometheus_client import Counter
 
 
 class RedisClient:

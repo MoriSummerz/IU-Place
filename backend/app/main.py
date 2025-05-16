@@ -3,6 +3,7 @@ from routes.router import router
 from depends import redis_client
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
+from prometheus_fastapi_instrumentator import Instrumentator
 
 
 @asynccontextmanager
@@ -24,3 +25,5 @@ app.add_middleware(
 )
 
 app.include_router(router)
+Instrumentator().instrument(app).expose(app)
+

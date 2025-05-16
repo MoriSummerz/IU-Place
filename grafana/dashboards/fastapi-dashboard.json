@@ -1,0 +1,147 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "type": "dashboard",
+        "name": "Annotations & Alerts",
+        "enabled": true
+      }
+    ]
+  },
+  "panels": [
+    {
+      "title": "\uD83D\uDCE8 WebSocket Messages Sent (rate)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(websocket_sent_messages_total[1m])",
+          "legendFormat": "{{handler}}"
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "title": "\uD83D\uDCE5 WebSocket Messages Received",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(websocket_received_messages_total[1m])",
+          "legendFormat": "{{handler}}"
+        }
+      ],
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "title": "🔌 WebSocket Connections",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "websocket_connections"
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 4,
+        "h": 6
+      }
+    },
+    {
+      "title": "\uD83D\uDCBB HTTP Requests by Endpoint",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum(rate(http_requests_total[1m])) by (handler)",
+          "legendFormat": "{{handler}}"
+        }
+      ],
+      "gridPos": {
+        "x": 4,
+        "y": 8,
+        "w": 10,
+        "h": 6
+      }
+    },
+    {
+      "title": "⚡\uFE0F Request Duration (95th percentile)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le, handler))",
+          "legendFormat": "{{handler}}"
+        }
+      ],
+      "gridPos": {
+        "x": 14,
+        "y": 8,
+        "w": 10,
+        "h": 6
+      }
+    },
+    {
+      "title": "🔥 CPU Usage (seconds)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(process_cpu_seconds_total[1m])"
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 14,
+        "w": 12,
+        "h": 6
+      }
+    },
+    {
+      "title": "🧠 Memory Usage (RSS)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "process_resident_memory_bytes",
+          "legendFormat": "Memory"
+        }
+      ],
+      "gridPos": {
+        "x": 12,
+        "y": 14,
+        "w": 8,
+        "h": 6
+      }
+    },
+    {
+      "title": "🕒 App Uptime (seconds)",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "time() - process_start_time_seconds"
+        }
+      ],
+      "gridPos": {
+        "x": 20,
+        "y": 14,
+        "w": 4,
+        "h": 6
+      }
+    }
+  ],
+  "title": "FastAPI Monitoring Dashboard",
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "10s"
+}
