@@ -35,4 +35,4 @@ jobs:
           script: |
             cd /home/web/IU-Place
             git pull origin main
-            DB_PASSWORD=${{ secrets.DB_PASSWORD }} APP_PORT=${{ secrets.APP_PORT }} GF_USER=${{ secrets.GF_USER }} GF_PASSWORD=${{ secrets.GF_PASSWORD }} docker compose up -d --build
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }} APP_PORT=${{ secrets.APP_PORT }} GF_USER=${{ secrets.GF_USER }} GF_PASSWORD=${{ secrets.GF_PASSWORD }} GF_SERVER_ROOT_URL=${{ secrets.GF_SERVER_ROOT_URL }} docker compose up -d --build
