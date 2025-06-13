@@ -1,4 +1,4 @@
-# UI/place - Collaborative Pixel Canvas Editr
+# IU/place - Collaborative Pixel Canvas Editr
 
 > Project built as part of "Distributed and Network Programming" and "System and Network Administration" courses final project
 
@@ -6,6 +6,9 @@ Real-time collaborative pixel canvas editor, inspired by the famous [Reddit Plac
 also known as Pixel Battle). \
 The project allows users to draw on a shared canvas with real-time updates. \
 System supports 100+ concurrent users and 1000+ requests per second.
+
+![DNP Project Report Interface](https://github.com/user-attachments/assets/21fbbf1a-3127-4af1-afaa-b39dba1338fd)
+> The deployed version can be found at https://iuplace.morisummer.dev/
 
 ## Authors
 
