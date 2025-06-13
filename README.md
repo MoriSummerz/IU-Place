@@ -42,3 +42,7 @@ DB_PASSWORD=<YOUR_PASSWORD> APP_PORT=<YOUR_PORT> GF_USER=<GRAFANA_USER> GF_PASSW
 #### DevOps
 ![DevOps](https://skillicons.dev/icons?i=docker,nginx,prometheus,grafana&theme=dark)
 
+
+## Project Architucture
+![DNP Project Report Schema](https://github.com/user-attachments/assets/85dca3a4-c214-4eec-b05e-e3555e99eb3e)
+
